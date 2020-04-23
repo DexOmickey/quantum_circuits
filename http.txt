@@ -1,32 +1,50 @@
 
---| SYN packet of the TCP Three way handshake
-04:03:24.353296 IP ip-172-31-85-150.ec2.internal.60528 > stevens.edu.http: Flags [S], seq 3738313844, win 64240, options [mss 1460,sackOK,TS val 1110554579 ecr 0,nop,wscale 6], length 0
 
---| SYN/ACK packet of the TCP Three way handshake
-04:03:24.361040 IP stevens.edu.http > ip-172-31-85-150.ec2.internal.60528: Flags [S.], seq 502332141, ack 3738313845, win 14480, options [mss 1460,sackOK,TS val 4258853044 ecr 1110554579,nop,wscale 7], length 0
+--| Identification of HTTP type and status code
+HTTP/1.1 200 OK
 
---| ACK packet of the TCP Three way handshake 
-04:03:24.361054 IP ip-172-31-85-150.ec2.internal.60528 > stevens.edu.http: Flags [.], ack 1, win 1004, options [nop,nop,TS val 1110554586 ecr 4258853044], length 0
+--| Date request was made to create header
+Date: Sun, 22 Mar 2020 22:12:35 GMT
 
---| HTTP Head request to server
-04:03:38.911296 IP ip-172-31-85-150.ec2.internal.60528 > stevens.edu.http: Flags [P.], seq 1:18, ack 1, win 1004, options [nop,nop,TS val 1110569137 ecr 4258853044], length 17: HTTP: HEAD / HTTP/1.0
+--| Connection status, keeping connection open with -ign_eof flag in request 
+Connection: keep-alive
 
---| Acknowledgement to Head Request
-04:03:38.919218 IP stevens.edu.http > ip-172-31-85-150.ec2.internal.60528: Flags [.], ack 18, win 114, options [nop,nop,TS val 4258867602 ecr 1110569137], length 0
+--| Strictly accepting requests over TLS (HTTPS) with maximum age set to 2 years
+Strict-Transport-Security: max-age=31536000
 
---| Response/Message to HTTP head request
-04:03:40.939753 IP stevens.edu.http > ip-172-31-85-150.ec2.internal.60528: Flags [P.], seq 1:195, ack 20, win 114, options [nop,nop,TS val 4258869622 ecr 1110571157], length 194: HTTP: HTTP/1.1 301 Moved Permanently
+--| Server receiving the http request over TLS in this case Apache Traffic Server (ATS)|  receives the request and reponds to it
+Server: ATS
 
---| Acknowledgement to message/reponse
-04:03:40.939763 IP ip-172-31-85-150.ec2.internal.60528 > stevens.edu.http: Flags [.], ack 195, win 1001, options [nop,nop,TS val 1110571165 ecr 4258869622], length 0
+--| Directive to caching in http request and response. In this cases, caches should check with the origin server for validation before using the cached copy,should not store anything about the client      	 request or server response, resource is considered fresh in 0 secs and response is for a user and should not be stored in a shared cache 
+Cache-Control: no-store, no-cache, max-age=0, private
 
---| End of connection initialization from client
-04:03:40.939770 IP stevens.edu.http > ip-172-31-85-150.ec2.internal.60528: Flags [F.], seq 195, ack 20, win 114, options [nop,nop,TS val 4258869622 ecr 1110571157], length 0
+--| The format the response should be in and this case the response can be in an html or text format 
+Content-Type: text/html
 
---| Acknowledgement and End of connection from server
-04:03:40.939835 IP ip-172-31-85-150.ec2.internal.60528 > stevens.edu.http: Flags [F.], seq 20, ack 196, win 1002, options [nop,nop,TS val 1110571165 ecr 4258869622], length 0  
+--| The response for the request is in English language 
+Content-Language: en
 
---| Acknowledgement to End of connection from client
-04:03:40.947283 IP stevens.edu.http > ip-172-31-85-150.ec2.internal.60528: Flags [.], ack 21, win 114, options [nop,nop,TS val 4258869630 ecr 1110571165], length 0
+--| The response to http request does not expire
+Expires: -1
 
+--| Security policy to allow forms, scripts, pop-ups in sandbox and also allowing to X-Frame-Options SAMEORIGIN and denying others
+Content-Security-Policy: frame-ancestors 'self' https://*.techcrunch.com https://*.yahoo.com https://*.aol.com https://*.huffingtonpost.com https://*.oath.com https://*.verizonmedia.com https://*.publishing.oath.com; sandbox allow-forms allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox allow-presentation; report-uri https://csp.yahoo.com/beacon/csp?src=ats&site=frontpage&region=US&lang=en-US&device=&yrid=&partner=;
+
+--| Directive to stop the communicating server from being embedding <frame> in other (external) target servers 
+X-Frame-Options: SAMEORIGIN
+
+--| Directive to enable filtering, detect and block reflected cross-site scripting 
+X-XSS-Protection: 1; mode=block
+
+--| Enforcement of Certificate Transparency requirements with max-age of 2years 
+Expect-CT: max-age=31536000, report-uri="http://csp.yahoo.com/beacon/csp?src=yahoocom-expect-ct-report-only"
+
+--| Not making referral when there is downgrade in the protocol security
+Referrer-Policy: no-referrer-when-downgrade
+
+--| Directive to for server blocks a request if the request destination is of has styles and scripts with it
+X-Content-Type-Options: nosniff
+
+--| Length of the encryted response
+Content-Length: 12
 
